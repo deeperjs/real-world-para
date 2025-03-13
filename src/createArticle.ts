@@ -9,11 +9,12 @@ export type ArticleInput = {
     tagList: string[];
     title: string;
 };
+
 // use case/workflow/application service/application logic
 export const createArticle =
     (
         articleRepository: ReturnType<typeof inMemoryArticleRepository>,
-        articleIdGenerator: IdGenerator
+        articleIdGenerator: IdGenerator,
     ) =>
         async (input: ArticleInput) => {
             const now = new Date();
@@ -30,3 +31,18 @@ export const createArticle =
             await articleRepository.create(article);
             return article;
         };
+
+
+// class CreateArticleService {
+//     constructor(deps) {
+//     }
+//     createArticle(data) {}
+// }
+//
+// const createArticle = (deps) => (data) => {};
+//
+// class UpdateArticleService {
+//     constructor(deps) {
+//     }
+//     updateArticle(data) {}
+// }
