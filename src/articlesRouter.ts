@@ -4,16 +4,8 @@ import {NotFoundError} from "./NotFoundError";
 import merge from "lodash.merge";
 import {incrementIdGenerator} from "./incrementIdGenerator";
 import {Router} from "express";
-type Article = {
-    body: string;
-    description: string;
-    tagList: Array<string>;
-    title: string;
-    slug: string;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-};
+import {Article} from "./article";
+
 const articleIdGenerator = incrementIdGenerator(String);
 const articles: Record<string, Article> = {};
 
