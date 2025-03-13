@@ -1,24 +1,7 @@
-import express, { ErrorRequestHandler } from "express";
+import express, {ErrorRequestHandler} from "express";
 import cors from "cors";
-import { NotFoundError } from "./NotFoundError";
-import makeSlug from "slug";
-import { incrementIdGenerator } from "./incrementIdGenerator";
-import omit from "lodash.omit";
-import merge from "lodash.merge";
+import {NotFoundError} from "./NotFoundError";
 import {articlesRouter} from "./articlesRouter";
-
-type Article = {
-  body: string;
-  description: string;
-  tagList: Array<string>;
-  title: string;
-  slug: string;
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
-const articleIdGenerator = incrementIdGenerator(String);
-const articles: Record<string, Article> = {};
 
 export const app = express();
 app.use(cors());
