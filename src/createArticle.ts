@@ -3,13 +3,7 @@ import {IdGenerator} from "./idGenerator";
 import {Article} from "./article";
 import makeSlug from "slug";
 import {Clock} from "./clock";
-
-export type ArticleInput = {
-    body: string;
-    description: string;
-    tagList: string[];
-    title: string;
-};
+import {ArticleInput} from "./parseArticleInput";
 
 // use case/workflow/application service/application logic
 export const createArticle =
