@@ -4,23 +4,17 @@ import { sqlArticleRepository } from "../infrastructure/sqlArticleRepository";
 import { inMemoryArticleRepository } from "../infrastructure/inMemoryArticleRepository";
 import {CreateArticle, createArticle} from "./createArticle";
 import { clock } from "../../shared/clock";
-import { updateArticle } from "./updateArticle";
+import {UpdateArticle, updateArticle} from "./updateArticle";
 import { Kysely } from "kysely";
 import { DB } from "../../dbTypes";
+import {transactional} from "../../shared/transactional";
 
 export const sqlArticlesCompositionRoot = (db: Kysely<DB>) => {
     const articleIdGenerator = uuidGenerator;
     const articleRepository = sqlArticleRepository(db);
-    // const create: CreateArticle = createArticle(articleRepository, articleIdGenerator, clock);
-    const txCreate: CreateArticle = (input) => {
-        return db.transaction().execute(async tx => {
-            const articleRepository = sqlArticleRepository(tx);
-            const create: CreateArticle = createArticle(articleRepository, articleIdGenerator, clock);
-            return create(input);
-        });
-    };
+    const create: CreateArticle = createArticle(articleRepository, articleIdGenerator, clock);
     const update = updateArticle(articleRepository, clock);
-    return { create: txCreate, update, articleRepository };
+    return { create, update, articleRepository };
 };
 export const inMemoryArticlesCompositionRoot = () => {
     const articleIdGenerator = incrementIdGenerator(String);
@@ -31,6 +25,6 @@ export const inMemoryArticlesCompositionRoot = () => {
 };
 export const articlesCompositionRoot = (db: Kysely<DB> | null) => {
     return db
-        ? sqlArticlesCompositionRoot(db)
+        ? transactional(db)(sqlArticlesCompositionRoot)
         : inMemoryArticlesCompositionRoot();
 };
