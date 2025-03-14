@@ -5,11 +5,13 @@ import { DB } from "../../dbTypes";
 export const sqlArticleRepository = (db: Kysely<DB>): ArticleRepository => {
     return {
         async create(article) {
-            const {tagList, ...cleanArticle} = article;
-            await db.insertInto('article').values(cleanArticle).execute();
-            if(tagList.length > 0) {
-                await db.insertInto('tags').values(tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
-            }
+            await db.transaction().execute(async tx => {
+                const {tagList, ...cleanArticle} = article;
+                await tx.insertInto('article').values(cleanArticle).execute();
+                if(tagList.length > 0) {
+                    await tx.insertInto('tags').values(tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
+                }
+            });
         },
         async update(article) {
             const {tagList, ...cleanArticle} = article;
