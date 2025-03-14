@@ -2,7 +2,7 @@ import { uuidGenerator } from "../../shared/uuidGenerator";
 import { incrementIdGenerator } from "../../shared/incrementIdGenerator";
 import { sqlArticleRepository } from "../infrastructure/sqlArticleRepository";
 import { inMemoryArticleRepository } from "../infrastructure/inMemoryArticleRepository";
-import { createArticle } from "./createArticle";
+import {CreateArticle, createArticle} from "./createArticle";
 import { clock } from "../../shared/clock";
 import { updateArticle } from "./updateArticle";
 import { Kysely } from "kysely";
@@ -11,9 +11,16 @@ import { DB } from "../../dbTypes";
 export const sqlArticlesCompositionRoot = (db: Kysely<DB>) => {
     const articleIdGenerator = uuidGenerator;
     const articleRepository = sqlArticleRepository(db);
-    const create = createArticle(articleRepository, articleIdGenerator, clock);
+    // const create: CreateArticle = createArticle(articleRepository, articleIdGenerator, clock);
+    const txCreate: CreateArticle = (input) => {
+        return db.transaction().execute(async tx => {
+            const articleRepository = sqlArticleRepository(tx);
+            const create: CreateArticle = createArticle(articleRepository, articleIdGenerator, clock);
+            return create(input);
+        });
+    };
     const update = updateArticle(articleRepository, clock);
-    return { create, update, articleRepository };
+    return { create: txCreate, update, articleRepository };
 };
 export const inMemoryArticlesCompositionRoot = () => {
     const articleIdGenerator = incrementIdGenerator(String);
