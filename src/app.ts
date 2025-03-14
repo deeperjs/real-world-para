@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import {errorHandler, notFoundHandler} from "./error/errorHandler";
 import {Config} from "./config";
-import {createArticlesRouter} from "./articles/articlesRouter";
+import {createArticlesRouter} from "./articles/api/articlesRouter";
 import {createDb} from "./db";
-import {articlesCompositionRoot} from "./articles/articlesCompositionRoot";
+import {articlesCompositionRoot} from "./articles/application/articlesCompositionRoot";
 
 export const createApp = (config: Config) => {
     const app = express();

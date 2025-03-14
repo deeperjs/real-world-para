@@ -1,10 +1,10 @@
 import omit from "lodash.omit";
-import {NotFoundError} from "../error/NotFoundError";
+import {NotFoundError} from "../../error/NotFoundError";
 import {Router} from "express";
-import {ArticleInput, UpdateArticleInput} from "./parseArticleInput";
-import {CreateArticle} from "./createArticle";
-import {UpdateArticle} from "./updateArticle";
-import {ArticleRepository} from "./article";
+import {ArticleInput, UpdateArticleInput} from "../application/parseArticleInput";
+import {CreateArticle} from "../application/createArticle";
+import {UpdateArticle} from "../application/updateArticle";
+import {ArticleRepository} from "../domain/article";
 
 type ArticleRouterDeps = {
     create: CreateArticle;
