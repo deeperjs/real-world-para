@@ -5,13 +5,15 @@ import makeSlug from "slug";
 import {Clock} from "./clock";
 import {ArticleInput} from "./parseArticleInput";
 
+export type CreateArticle = (input: ArticleInput) => Promise<Article>;
+
 // use case/workflow/application service/application logic
 export const createArticle =
     (
         articleRepository: ReturnType<typeof inMemoryArticleRepository>,
         articleIdGenerator: IdGenerator,
         clock: Clock
-    ) =>
+    ): CreateArticle =>
         async (input: ArticleInput) => {
             const now = clock();
             const article: Article = {
