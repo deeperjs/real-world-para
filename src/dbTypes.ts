@@ -5,7 +5,7 @@
 
 import type { ColumnType } from "kysely";
 
-export type Timestamp = ColumnType<Date | string>;
+export type Timestamp = ColumnType<Date, Date | string>;
 
 export interface Article {
   body: string;

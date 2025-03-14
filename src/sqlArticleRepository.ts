@@ -17,7 +17,14 @@ export const sqlArticleRepository = (db: Kysely<DB>): ArticleRepository => {
                 await db.insertInto('tags').values(article.tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
             }
         },
-        // @ts-ignore
-        async findBySlug(slug) {},
+        async findBySlug(slug) {
+            const article = await db.selectFrom('article').where('slug', '=', slug).selectAll().executeTakeFirst();
+            if(!article) return null;
+            const tags = await db.selectFrom('tags').where('articleId', '=', article.id).selectAll().execute();
+            return {
+                ...article,
+                tagList: tags.map(tag => tag.name)
+            };
+        },
     };
 };
