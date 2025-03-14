@@ -7,3 +7,6 @@ export const ArticleInput = z.object({
     tagList: z.array(z.string()),
 });
 export type ArticleInput = z.infer<typeof ArticleInput>;
+
+export const UpdateArticleInput = ArticleInput.partial();
+export type UpdateArticleInput = z.infer<typeof UpdateArticleInput>;

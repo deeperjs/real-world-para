@@ -8,7 +8,8 @@ import {Article} from "./article";
 import {inMemoryArticleRepository} from "./inMemoryArticleRepository";
 import {createArticle} from "./createArticle";
 import {clock} from "./clock";
-import {ArticleInput} from "./parseArticleInput";
+import {ArticleInput, UpdateArticleInput} from "./parseArticleInput";
+import {updateArticle} from "./updateArticle";
 
 const articleIdGenerator = incrementIdGenerator(String);
 const articleRepository = inMemoryArticleRepository();
@@ -24,18 +25,17 @@ articlesRouter.post("/api/articles", async (req, res, next) => {
     res.json({ article: omit(article, "id") });
 });
 articlesRouter.put("/api/articles/:slug", async (req, res, next) => {
-    const articleInput = req.body.article;
+    // HTTP
+    const articleInput = UpdateArticleInput.parse(req.body.article);
     const slug = req.params.slug;
-    const existingArticle = await articleRepository.findBySlug(slug);
 
-    if (!existingArticle) {
-        throw new NotFoundError(`Article with slug ${slug} does not exist`);
-    }
-    const article = merge(existingArticle, articleInput);
-    const now = new Date();
-    article.updatedAt = now;
-    article.slug = makeSlug(article.title);
-    await articleRepository.update(article);
+    // TS
+    const article = await updateArticle(articleRepository, clock)(
+        slug,
+        articleInput
+    );
+
+    // HTTP
     res.json({ article: omit(article, "id") });
 });
 articlesRouter.get("/api/articles/:slug", async (req, res, next) => {
