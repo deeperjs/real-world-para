@@ -5,16 +5,18 @@ import { DB } from "./dbTypes";
 export const sqlArticleRepository = (db: Kysely<DB>): ArticleRepository => {
     return {
         async create(article) {
-            await db.insertInto('article').values(article).execute();
-            if(article.tagList.length > 0) {
-                await db.insertInto('tags').values(article.tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
+            const {tagList, ...cleanArticle} = article;
+            await db.insertInto('article').values(cleanArticle).execute();
+            if(tagList.length > 0) {
+                await db.insertInto('tags').values(tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
             }
         },
         async update(article) {
-            await db.updateTable('article').set(article).where('article.id', '=', article.id).execute();
+            const {tagList, ...cleanArticle} = article;
+            await db.updateTable('article').set(cleanArticle).where('article.id', '=', article.id).execute();
             await db.deleteFrom('tags').where('tags.articleId', '=', article.id).execute();
-            if(article.tagList.length > 0) {
-                await db.insertInto('tags').values(article.tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
+            if(tagList.length > 0) {
+                await db.insertInto('tags').values(tagList.map(tag => ({articleId: article.id, name: tag}))).execute();
             }
         },
         async findBySlug(slug) {
