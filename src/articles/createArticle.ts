@@ -1,8 +1,8 @@
 import {inMemoryArticleRepository} from "./inMemoryArticleRepository";
-import {IdGenerator} from "./idGenerator";
+import {IdGenerator} from "../shared/idGenerator";
 import {Article} from "./article";
 import makeSlug from "slug";
-import {Clock} from "./clock";
+import {Clock} from "../shared/clock";
 import {ArticleInput} from "./parseArticleInput";
 
 export type CreateArticle = (input: ArticleInput) => Promise<Article>;

@@ -1,5 +1,5 @@
 import omit from "lodash.omit";
-import {NotFoundError} from "./NotFoundError";
+import {NotFoundError} from "../error/NotFoundError";
 import {Router} from "express";
 import {ArticleInput, UpdateArticleInput} from "./parseArticleInput";
 import {CreateArticle} from "./createArticle";
