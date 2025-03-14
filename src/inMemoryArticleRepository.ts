@@ -1,10 +1,14 @@
 import {Article, ArticleRepository} from "./article";
+import {undefined} from "zod";
 
 export const inMemoryArticleRepository = (): ArticleRepository => {
-    const articles: Record<string, Article> = {};
+    let articles: Record<string, Article> = {};
     // const articles: {[key: string]: Article} = {};
     // const articles: Array<Article> = [];
     return {
+        async deleteAll(): Promise<void> {
+            articles = {};
+        },
         async create(article) {
             articles[article.id] = article;
         },
@@ -16,6 +20,6 @@ export const inMemoryArticleRepository = (): ArticleRepository => {
                 (article) => article.slug === slug
             );
             return article ?? null;
-        },
+        }
     };
 };

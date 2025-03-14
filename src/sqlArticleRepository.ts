@@ -28,5 +28,8 @@ export const sqlArticleRepository = (db: Kysely<DB>): ArticleRepository => {
                 tagList: tags.map(tag => tag.name)
             };
         },
+        async deleteAll() {
+            await db.deleteFrom("article").execute();
+        },
     };
 };
