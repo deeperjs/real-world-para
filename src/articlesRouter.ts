@@ -10,9 +10,14 @@ import {createArticle} from "./createArticle";
 import {clock} from "./clock";
 import {ArticleInput, UpdateArticleInput} from "./parseArticleInput";
 import {updateArticle} from "./updateArticle";
+import {createDb} from "./db";
+import {sqlArticleRepository} from "./sqlArticleRepository";
+import {uuidGenerator} from "./uuidGenerator";
 
-const articleIdGenerator = incrementIdGenerator(String);
-const articleRepository = inMemoryArticleRepository();
+const articleIdGenerator = process.env.DATABASE_URL ? uuidGenerator : incrementIdGenerator(String);
+const articleRepository = process.env.DATABASE_URL ? sqlArticleRepository(createDb(
+    process.env.DATABASE_URL
+)) : inMemoryArticleRepository();
 
 export const articlesRouter = Router();
 
